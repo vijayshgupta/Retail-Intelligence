@@ -75,7 +75,7 @@ else:
 
   ## Construct the URL to retrieve JSON.
   upload_url = ''.join([
-      'https://detect.roboflow.com/retail-sku110/4'
+      'https://detect.roboflow.com/retail-sku110/4',
       '?api_key=9uGj14Y2zTQoUwsMhPSu'
   ])
 
