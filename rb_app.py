@@ -47,8 +47,8 @@ else:
 
   ## Construct the URL to retrieve image.
   upload_url = ''.join([
-      'https://detect.roboflow.com/retail_dataset/1'
-      '?api_key=lKyG2oSGXzoyvK2Zsjkj'
+      'https://detect.roboflow.com/retail-sku110/4',
+      '?api_key=9uGj14Y2zTQoUwsMhPSu',
       '&format=image',
       '&overlap={overlap_threshold * 100}',
       '&confidence={confidence_threshold * 100}',
@@ -75,10 +75,8 @@ else:
 
   ## Construct the URL to retrieve JSON.
   upload_url = ''.join([
-      'https://detect.roboflow.com/retail_dataset/1'
-      '?api_key=lKyG2oSGXzoyvK2Zsjkj'
-      #f'https://infer.roboflow.com/retail_dataset',
-      #f'?access_token=lKyG2oSGXzoyvK2Zsjkj'
+      'https://detect.roboflow.com/retail-sku110/4'
+      '?api_key=9uGj14Y2zTQoUwsMhPSu'
   ])
 
   ## POST to the API.
