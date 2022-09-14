@@ -7,15 +7,19 @@ import numpy as np
 
 @st.cache
 def load_model():
-    model= torch.hub.load('C:/Users/user/yolov5_old', 'custom', path='E:/Work/ImageAnalytics/Retail-SKU/Retail_100_best.pt',source='local')
+    model=  torch.hub.load('ultralytics/yolov5', 'custom',
+                           path='Retail_100_best.pt'
+                           #,force_reload=True
+                          )
+
     return model
 model = load_model()
 model.conf = 0.40
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
-st.title("Retail Use Case ")
-st.write("SKU Item Detection using Computer Vision")
+st.title("Image Analytics for Retail Intelligence  ")
+st.write("SKU Item Detection using Computer Vision : Demo")
 file = st.file_uploader("Please upload an image file", type=["jpg","jpeg","png",'tif'])
 
 if file is None:
