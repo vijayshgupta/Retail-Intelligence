@@ -61,7 +61,7 @@ else:
                     headers={
       'Content-Type': 'application/x-www-form-urlencoded'
   })
-
+  st.write(r)
   image = Image.open(BytesIO(r.content))
 
   # Convert to JPEG Buffer.
