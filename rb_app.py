@@ -2,12 +2,13 @@ import streamlit as st
 import requests
 import base64
 import io
-from PIL import Image
+from PIL import Image, ImageFont, ImageDraw, ImageEnhance,ImageOps
 import glob
 from base64 import decodebytes
 from io import BytesIO
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 ##########
 ##### Set up sidebar.
@@ -21,8 +22,8 @@ file = st.file_uploader("Please upload an image file", type=["jpg","jpeg","png",
 
 
 ## Add in sliders.
-confidence_threshold = st.sidebar.slider('Confidence threshold: What is the minimum acceptable confidence level for displaying a bounding box?', 0.0, 1.0, 0.5, 0.01)
-overlap_threshold = st.sidebar.slider('Overlap threshold: What is the maximum amount of overlap permitted between visible bounding boxes?', 0.0, 1.0, 0.5, 0.01)
+confidence_threshold = st.sidebar.slider('Confidence threshold: What is the minimum acceptable confidence level for displaying a bounding box?', 0.0, 1.0, 0.4, 0.01)
+overlap_threshold = st.sidebar.slider('Overlap threshold: What is the maximum amount of overlap permitted between visible bounding boxes?', 0.0, 1.0, 0.25, 0.01)
 
 
 ##########
@@ -33,13 +34,13 @@ if file is None:
     st.text("Please upload an image file")
 else:
   image = Image.open(file)
-  
+
   ## Subtitle.
   st.write('### Inferenced Image')
 
   # Convert to JPEG Buffer.
   buffered = io.BytesIO()
-  image.save(buffered, quality=100, format='JPEG')
+  image.save(buffered, quality=90, format='JPEG')
 
   # Base 64 encode.
   img_str = base64.b64encode(buffered.getvalue())
@@ -47,12 +48,11 @@ else:
 
   ## Construct the URL to retrieve image.
   upload_url = ''.join([
-      f'https://detect.roboflow.com/retail-sku110/4',
-      f'?api_key=9uGj14Y2zTQoUwsMhPSu',
+      'https://detect.roboflow.com/retail-sku110/4?api_key=9uGj14Y2zTQoUwsMhPSu',
       '&format=image',
-      '&overlap={overlap_threshold * 100}',
-      '&confidence={confidence_threshold * 100}',
-      '&stroke=7'
+      f'&overlap={overlap_threshold * 100}',
+      f'&confidence={confidence_threshold * 100}',
+      '&stroke=5'
   ])
 
   ## POST to the API.
@@ -61,21 +61,19 @@ else:
                     headers={
       'Content-Type': 'application/x-www-form-urlencoded'
   })
-  st.write(r)
+  #st.write(r)
   image = Image.open(BytesIO(r.content))
 
   # Convert to JPEG Buffer.
   buffered = io.BytesIO()
-  image.save(buffered, quality=90, format='JPEG')
+  image.save(buffered, quality=100, format='JPEG')
 
   # Display image.
-  st.image(image,
-           use_column_width=True)
+  st.image(image,use_column_width=True)
 
   ## Construct the URL to retrieve JSON.
   upload_url = ''.join([
-      f'https://detect.roboflow.com/retail-sku110/4',
-      f'?api_key=9uGj14Y2zTQoUwsMhPSu'
+      'https://detect.roboflow.com/retail-sku110/4?api_key=9uGj14Y2zTQoUwsMhPSu'
   ])
 
   ## POST to the API.
@@ -90,7 +88,6 @@ else:
 
   ## Generate list of confidences.
   confidences = [box['confidence'] for box in output_dict['predictions']]
-
   ## Summary statistics section in main app.
   st.write('### Summary Statistics')
   st.write(f'Number of Bounding Boxes (ignoring overlap thresholds): {len(confidences)}')
