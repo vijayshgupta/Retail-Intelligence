@@ -38,8 +38,7 @@ st.write('# Blood Cell Count Object Detection')
 if uploaded_file is None:
   st.write('# Blood Cell Count Object Detection')    
 else:
-    # User-selected image.
-    image = Image.open(uploaded_file)
+  image = Image.open(uploaded_file)
 
 ## Subtitle.
 st.write('### Inferenced Image')
