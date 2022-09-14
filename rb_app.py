@@ -39,7 +39,7 @@ else:
 
   # Convert to JPEG Buffer.
   buffered = io.BytesIO()
-  image.save(buffered, quality=90, format='JPEG')
+  image.save(buffered, quality=100, format='JPEG')
 
   # Base 64 encode.
   img_str = base64.b64encode(buffered.getvalue())
@@ -47,12 +47,8 @@ else:
 
   ## Construct the URL to retrieve image.
   upload_url = ''.join([
-      'https://infer.roboflow.com/rf-bccd-bkpj9--1',
-      '?access_token=vbIBKNgIXqAQ'
-      #'https://detect.roboflow.com/',
-      #'?model=retail_dataset&version=1&api_key=lKyG2oSGXzoyvK2Zsjkj',
-      #f'https://infer.roboflow.com/retail_dataset',
-      #f'?access_token=lKyG2oSGXzoyvK2Zsjkj',
+      'https://detect.roboflow.com/retail_dataset/1'
+      '?api_key=lKyG2oSGXzoyvK2Zsjkj'
       '&format=image',
       '&overlap={overlap_threshold * 100}',
       '&confidence={confidence_threshold * 100}',
@@ -79,8 +75,8 @@ else:
 
   ## Construct the URL to retrieve JSON.
   upload_url = ''.join([
-      'https://infer.roboflow.com/rf-bccd-bkpj9--1',
-      '?access_token=vbIBKNgIXqAQ'
+      'https://detect.roboflow.com/retail_dataset/1'
+      '?api_key=lKyG2oSGXzoyvK2Zsjkj'
       #f'https://infer.roboflow.com/retail_dataset',
       #f'?access_token=lKyG2oSGXzoyvK2Zsjkj'
   ])
