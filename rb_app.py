@@ -15,100 +15,89 @@ import matplotlib.pyplot as plt
 
 # Add in location to select image.
 
-st.sidebar.write('#### Select an image to upload.')
-uploaded_file = st.sidebar.file_uploader('',
-                                         type=['png', 'jpg', 'jpeg'],
-                                         accept_multiple_files=False)
+st.title("Image Analytics for Retail Intelligence  ")
+st.write("SKU Item Detection using Computer Vision : Demo")
+file = st.file_uploader("Please upload an image file", type=["jpg","jpeg","png",'tif'])
 
-st.sidebar.write('[Find additional images on Roboflow.](https://public.roboflow.com/object-detection/bccd/)')
 
 ## Add in sliders.
 confidence_threshold = st.sidebar.slider('Confidence threshold: What is the minimum acceptable confidence level for displaying a bounding box?', 0.0, 1.0, 0.5, 0.01)
 overlap_threshold = st.sidebar.slider('Overlap threshold: What is the maximum amount of overlap permitted between visible bounding boxes?', 0.0, 1.0, 0.5, 0.01)
 
 
-
 ##########
 ##### Set up main app.
 ##########
 
-## Title.
-st.write('# Blood Cell Count Object Detection')
-
-## Pull in default image or user-selected image.
-if uploaded_file is None:
-    st.write('Select an image to upload.')
-
+if file is None:
+    st.text("Please upload an image file")
 else:
-    # User-selected image.
-    image = Image.open(uploaded_file)
+  image = Image.open(file)
+  
+  ## Subtitle.
+  st.write('### Inferenced Image')
 
-## Subtitle.
-st.write('### Inferenced Image')
+  # Convert to JPEG Buffer.
+  buffered = io.BytesIO()
+  image.save(buffered, quality=100, format='JPEG')
 
-# Convert to JPEG Buffer.
-buffered = io.BytesIO()
-image.save(buffered, quality=100, format='JPEG')
+  # Base 64 encode.
+  img_str = base64.b64encode(buffered.getvalue())
+  img_str = img_str.decode('ascii')
 
-# Base 64 encode.
-img_str = base64.b64encode(buffered.getvalue())
-img_str = img_str.decode('ascii')
+  ## Construct the URL to retrieve image.
+  upload_url = ''.join([
+      f'https://detect.roboflow.com/retail-sku110/4',
+      f'?api_key=9uGj14Y2zTQoUwsMhPSu',
+      '&format=image',
+      '&overlap={overlap_threshold * 100}',
+      '&confidence={confidence_threshold * 100}',
+      '&stroke=7'
+  ])
 
-## Construct the URL to retrieve image.
-upload_url = ''.join([
-    'https://infer.roboflow.com/rf-bccd-bkpj9--1',
-    '?access_token=vbIBKNgIXqAQ',
-    '&format=image',
-    f'&overlap={overlap_threshold * 100}',
-    f'&confidence={confidence_threshold * 100}',
-    '&stroke=2',
-    '&labels=True'
-])
+  ## POST to the API.
+  r = requests.post(upload_url,
+                    data=img_str,
+                    headers={
+      'Content-Type': 'application/x-www-form-urlencoded'
+  })
 
-## POST to the API.
-r = requests.post(upload_url,
-                  data=img_str,
-                  headers={
-    'Content-Type': 'application/x-www-form-urlencoded'
-})
+  image = Image.open(BytesIO(r.content))
 
-image = Image.open(BytesIO(r.content))
+  # Convert to JPEG Buffer.
+  buffered = io.BytesIO()
+  image.save(buffered, quality=90, format='JPEG')
 
-# Convert to JPEG Buffer.
-buffered = io.BytesIO()
-image.save(buffered, quality=90, format='JPEG')
+  # Display image.
+  st.image(image,
+           use_column_width=True)
 
-# Display image.
-st.image(image,
-         use_column_width=True)
+  ## Construct the URL to retrieve JSON.
+  upload_url = ''.join([
+      f'https://detect.roboflow.com/retail-sku110/4',
+      f'?api_key=9uGj14Y2zTQoUwsMhPSu'
+  ])
 
-## Construct the URL to retrieve JSON.
-upload_url = ''.join([
-    'https://infer.roboflow.com/rf-bccd-bkpj9--1',
-    '?access_token=vbIBKNgIXqAQ'
-])
+  ## POST to the API.
+  r = requests.post(upload_url,
+                    data=img_str,
+                    headers={
+      'Content-Type': 'application/x-www-form-urlencoded'
+  })
 
-## POST to the API.
-r = requests.post(upload_url,
-                  data=img_str,
-                  headers={
-    'Content-Type': 'application/x-www-form-urlencoded'
-})
+  ## Save the JSON.
+  output_dict = r.json()
 
-## Save the JSON.
-output_dict = r.json()
+  ## Generate list of confidences.
+  confidences = [box['confidence'] for box in output_dict['predictions']]
 
-## Generate list of confidences.
-confidences = [box['confidence'] for box in output_dict['predictions']]
+  ## Summary statistics section in main app.
+  st.write('### Summary Statistics')
+  st.write(f'Number of Bounding Boxes (ignoring overlap thresholds): {len(confidences)}')
+  st.write(f'Average Confidence Level of Bounding Boxes: {(np.round(np.mean(confidences),4))}')
 
-## Summary statistics section in main app.
-st.write('### Summary Statistics')
-st.write(f'Number of Bounding Boxes (ignoring overlap thresholds): {len(confidences)}')
-st.write(f'Average Confidence Level of Bounding Boxes: {(np.round(np.mean(confidences),4))}')
-
-## Histogram in main app.
-st.write('### Histogram of Confidence Levels')
-fig, ax = plt.subplots()
-ax.hist(confidences, bins=10, range=(0.0,1.0))
-st.pyplot(fig)
-
+  ## Histogram in main app.
+  st.write('### Histogram of Confidence Levels')
+  fig, ax = plt.subplots()
+  ax.hist(confidences, bins=10, range=(0.0,1.0))
+  st.pyplot(fig)
