@@ -47,15 +47,15 @@ else:
 
   ## Construct the URL to retrieve image.
   upload_url = ''.join([
-      'https://detect.roboflow.com/',
-      '?model=retail_dataset&version=1&api_key=lKyG2oSGXzoyvK2Zsjkj',
-      #'https://infer.roboflow.com/rf-bccd-bkpj9--1',
-      #'?access_token=vbIBKNgIXqAQ',
+      #'https://detect.roboflow.com/',
+      #'?model=retail_dataset&version=1&api_key=lKyG2oSGXzoyvK2Zsjkj',
+      'https://infer.roboflow.com/rf-bccd-bkpj9--1',
+      '?access_token=vbIBKNgIXqAQ',
       '&format=image',
       f'&overlap={overlap_threshold * 100}',
       f'&confidence={confidence_threshold * 100}',
-      '&stroke=2',
-      '&labels=False'
+      '&stroke=3',
+      '&labels=false'
   ])
 
   ## POST to the API.
@@ -77,10 +77,10 @@ else:
 
   ## Construct the URL to retrieve JSON.
   upload_url = ''.join([
-      #'https://infer.roboflow.com/rf-bccd-bkpj9--1',
-      #'?access_token=vbIBKNgIXqAQ'
-      'https://detect.roboflow.com/',
-      '?model=retail_dataset&version=1&api_key=lKyG2oSGXzoyvK2Zsjkj'
+      'https://infer.roboflow.com/rf-bccd-bkpj9--1',
+      '?access_token=vbIBKNgIXqAQ'
+      #'https://detect.roboflow.com/',
+      #'?model=retail_dataset&version=1&api_key=lKyG2oSGXzoyvK2Zsjkj'
   ])
 
   ## POST to the API.
