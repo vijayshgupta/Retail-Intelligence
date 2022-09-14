@@ -54,8 +54,8 @@ else:
       #f'https://infer.roboflow.com/retail_dataset',
       #f'?access_token=lKyG2oSGXzoyvK2Zsjkj',
       '&format=image',
-      f'&overlap={overlap_threshold * 100}',
-      f'&confidence={confidence_threshold * 100}',
+      '&overlap={overlap_threshold * 100}',
+      '&confidence={confidence_threshold * 100}',
       '&stroke=7'
       #'&labels=True'
   ])
