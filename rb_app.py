@@ -27,14 +27,6 @@ confidence_threshold = st.sidebar.slider('Confidence threshold: What is the mini
 overlap_threshold = st.sidebar.slider('Overlap threshold: What is the maximum amount of overlap permitted between visible bounding boxes?', 0.0, 1.0, 0.5, 0.01)
 
 
-image = Image.open('./images/roboflow_logo.png')
-st.sidebar.image(image,
-                 use_column_width=True)
-
-image = Image.open('./images/streamlit_logo.png')
-st.sidebar.image(image,
-                 use_column_width=True)
-
 ##########
 ##### Set up main app.
 ##########
@@ -44,7 +36,7 @@ st.write('# Blood Cell Count Object Detection')
 
 ## Pull in default image or user-selected image.
 if uploaded_file is None:
-    
+  st.write('# Blood Cell Count Object Detection')    
 else:
     # User-selected image.
     image = Image.open(uploaded_file)
@@ -118,6 +110,3 @@ fig, ax = plt.subplots()
 ax.hist(confidences, bins=10, range=(0.0,1.0))
 st.pyplot(fig)
 
-## Display the JSON in main app.
-st.write('### JSON Output')
-st.write(r.json())
