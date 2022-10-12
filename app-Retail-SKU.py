@@ -1,9 +1,11 @@
 import torch
 import cv2,os
-from PIL import Image, ImageFont, ImageDraw, ImageEnhance,ImageOps
+from PIL import Image,ImageDraw
 import streamlit as st
 import pandas as pd
 import numpy as np
+
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 @st.cache
 def load_model():
@@ -16,7 +18,7 @@ def load_model():
 model = load_model()
 model.conf = 0.40
 
-os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+
 
 st.title("Image Analytics for Retail Intelligence  ")
 st.write("SKU Item Detection using Computer Vision : Demo")
